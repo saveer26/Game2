@@ -6,7 +6,7 @@ canvas.width = 500;
 canvas.height = 500;
 // player object
 const playerSprite = new Image();
-playerSprite.src = "sprites/player.webp";
+playerSprite.src = "sprites/player.png";
 const player = {
     sprite: playerSprite,
     x: 0,
@@ -16,15 +16,28 @@ const player = {
     speed:3,
     vx:0
     
-  };
+  }
 player.x = canvas.width / 2 - player.width / 2
   // function to draw the player;
+  const enemySprite = new Image();
+enemySprite.src = "sprites/bomb.png";
+  let enemy = {
+      sprite : enemySprite,
+      x : 0,
+      y : 50,
+      height : 45,
+      width : 40,
+      speed : 25,
+      vy : 25
+  }
   function drawPlayer() {
     ctx.drawImage(player.sprite,player.x,player.y,player.width,player.height);
 }
+function drawEnemy(){
+  ctx.drawImage(enemy.sprite,enemy.x,enemy.y,enemy.width,enemy.height);
+}
 // function to draw the backround
 function drawBackground() {
-    // needs to be fixed.
     const Background = new Image();
     Background.src = "sprites/backdrop.avif"
     ctx.drawImage(Background,0,0,canvas.width,canvas.height);
@@ -57,7 +70,8 @@ function movePlayer() {
 function update() {
   drawBackground();  
   drawPlayer();
-  movePlayer()
+  drawEnemy();
+  movePlayer();
     requestAnimationFrame(update);
 }
 update()
