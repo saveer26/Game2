@@ -1,9 +1,18 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d")
 let score = 0
+let scoreBoard = document.getElementById("score")
+// Collision Function
+function isColliding(rect1, rect2) {
+  return !(rect1.x > rect2.x + rect2.width ||
+             rect1.x + rect1.width < rect2.x ||
+             rect1.y > rect2.y + rect2.height ||
+             rect1.y + rect1.height < rect2.y);
+}
 
 canvas.width = 500;
 canvas.height = 500;
+
 // player object
 const playerSprite = new Image();
 playerSprite.src = "sprites/player.png";
@@ -27,9 +36,20 @@ enemySprite.src = "sprites/bomb.png";
       y : 50,
       height : 45,
       width : 40,
-      speed : 25,
+      speed : 3,
       vy : 25
   }
+  // collectable
+  const collectable = {
+    x:0,
+    y:0,
+    width:50,
+    height:50,
+    speed:2,
+    sprite:"None",
+    active: false
+  }
+  resetEnemy();
   function drawPlayer() {
     ctx.drawImage(player.sprite,player.x,player.y,player.width,player.height);
 }
@@ -66,12 +86,31 @@ function movePlayer() {
     player.x = 0
   }
 }
+function resetEnemy() {
+  let placeEnemy = Math.floor(Math.random()*canvas.width+1);
+    enemy.x = placeEnemy;
+    enemy.y = 50;
+}
+function moveEnemy(){
+  enemy.vy = enemy.speed; 
+  enemy.y += enemy.vy;
+  if (enemy.y >= canvas.height){
+    resetEnemy();
+  }
+  if (isColliding(player,enemy)){
+    resetEnemy();
+    score -= 10;
+    scoreBoard.innerHTML = score;
+  }
+
+}
 // uptate game function
 function update() {
   drawBackground();  
   drawPlayer();
   drawEnemy();
   movePlayer();
+  moveEnemy();
     requestAnimationFrame(update);
 }
 update()
