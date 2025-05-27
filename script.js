@@ -40,13 +40,15 @@ enemySprite.src = "sprites/bomb.png";
       vy : 25
   }
   // collectable
+  const collectableSprite = new Image();
+collectableSprite.src = "sprites/collectableSprite.png";
   const collectable = {
     x:0,
     y:0,
     width:50,
     height:50,
     speed:2,
-    sprite:"None",
+    sprite: collectableSprite,
     active: false
   }
   resetEnemy();
@@ -55,6 +57,9 @@ enemySprite.src = "sprites/bomb.png";
 }
 function drawEnemy(){
   ctx.drawImage(enemy.sprite,enemy.x,enemy.y,enemy.width,enemy.height);
+}
+function drawCollectable() {
+  ctx.drawImage(collectable.sprite,collectable.x,collectable.y,collectable.width,collectable.height);
 }
 // function to draw the backround
 function drawBackground() {
@@ -91,6 +96,11 @@ function resetEnemy() {
     enemy.x = placeEnemy;
     enemy.y = 50;
 }
+function resetCollectable() {
+  let placeCollectable = Math.floor(Math.random()*canvas.width+1);
+    collectable.x = placeCollectable;
+    collectable.y = 50;
+}
 function moveEnemy(){
   enemy.vy = enemy.speed; 
   enemy.y += enemy.vy;
@@ -102,6 +112,18 @@ function moveEnemy(){
     score -= 10;
     scoreBoard.innerHTML = score;
   }
+}
+  function moveCollectable(){
+    collectable.vy = enemy.speed; 
+    collectable.y += enemy.vy;
+    if (collectable.y >= canvas.height){
+      resetCollectable();
+    }
+    if (isColliding(player,collectable)){
+      resetCollectable();
+      score += 10;
+      scoreBoard.innerHTML = score;
+    }
 
 }
 // uptate game function
@@ -109,8 +131,10 @@ function update() {
   drawBackground();  
   drawPlayer();
   drawEnemy();
+  drawCollectable();
   movePlayer();
   moveEnemy();
+  moveCollectable();
     requestAnimationFrame(update);
 }
 update()
